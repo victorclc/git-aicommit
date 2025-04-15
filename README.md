@@ -37,7 +37,7 @@ Follow these steps to install and set up the script:
     export PATH=$PATH:/PATH_TO_PROJECT/git-aicommit
     ```
 
-# Usage
+## Usage
 
 1. **Stage Your Changes:**
 
@@ -56,7 +56,7 @@ Follow these steps to install and set up the script:
 If everything is correctly configured (including the API key and required dependencies), your Git editor will open with the AI-generated commit message ready for review.
 
 
-# Contributing
+## Contributing
 
 Contributions are welcome! If you have improvements or suggestions, feel free to open issues or submit pull requests.
 
