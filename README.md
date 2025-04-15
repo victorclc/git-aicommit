@@ -16,7 +16,7 @@ Follow these steps to install and set up the script:
 1. **Clone the repository:**
 
     ```bash
-    git clone <REPOSITORY_URL>
+    git clone git@github.com:victorclc/git-aicommit.git
     ```
 
 2. **Navigate to the project directory::**
