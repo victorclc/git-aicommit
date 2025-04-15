@@ -45,7 +45,7 @@ function main {
   local tmp_file=$(mktemp)
   echo $commit_message > $tmp_file
   git commit -e -F "$tmp_file"
-  rm $template_file
+  rm $tmp_file
 }
 
 main $*
