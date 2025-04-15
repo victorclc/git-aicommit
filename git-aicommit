@@ -10,8 +10,8 @@ function get_diff {
   echo $diff
 }
 
-function generate_commit_msg {
-  local diff=$1
+function call_openai {
+  local diff="$1"
   local prompt="Generate a concise and informative commit message in English based on the following changes:\n\n$diff"
   local payload=$(jq -n --arg prompt "$prompt" '{
     model: "gpt-3.5-turbo",
@@ -20,13 +20,10 @@ function generate_commit_msg {
     temperature: 0.5
   }')
 
-  local response=$(curl -s https://api.openai.com/v1/chat/completions \
+  curl -s https://api.openai.com/v1/chat/completions \
     -H "Content-Type: application/json" \
-    -H "Aauthorization: Bearer $OPENAI_API_KEY" \
-    -d "$payload")
-
-  local commit_message=$(echo "$RESPONSE" | jq -r '.choices[0].message.content // ""')
-  echo $commit_mesage
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d "$payload"
 }
 
 function main {
@@ -38,14 +35,16 @@ function main {
     exit 1
   fi
 
-  local commit_message=$(generate_commit_msg)
+  local openai_response=$(call_openai "$diff")
+  local commit_message=$(echo "$openai_response" | jq -r '.choices[0].message.content // ""')
   if [[ -z "$commit_message" ]]; then
-    echo "Failed to generate ai commit message, openai response: $response"
-    exit 1
+    echo "Failed to generate ai commit message, openai response: $openai_response"
+    exit 2
   fi
 
-  local template_file=$(mktemp)
-  git commit --template="$template_file"
+  local tmp_file=$(mktemp)
+  echo $commit_message > $tmp_file
+  git commit -e -F "$tmp_file"
   rm $template_file
 }
 
